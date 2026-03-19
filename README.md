@@ -1,6 +1,6 @@
 # Café de El Salvador - Dashboard de Sentimiento
 
-Sistema de feedback por WhatsApp con análisis de sentimiento (IA) y dashboard en tiempo real.
+Sistema de feedback por WhatsApp con análisis de sentimiento (IA) y dashboard en tiempo real como parte de la prueba tecnica de MAIC
 
 ## 1) Despliegue del proyecto
 
