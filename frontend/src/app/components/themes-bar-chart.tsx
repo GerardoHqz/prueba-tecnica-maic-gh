@@ -32,12 +32,18 @@ export function ThemesBarChart({ data }: ThemesBarChartProps) {
         </div>
 
         <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={data} layout="horizontal">
+          <BarChart data={data} layout="horizontal" margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(217, 119, 6, 0.1)" vertical={false} />
             <XAxis 
               dataKey="name" 
               tick={{ fill: '#fbbf24', fontSize: 11 }}
               axisLine={{ stroke: 'rgba(217, 119, 6, 0.2)' }}
+              interval={0}
+              height={56}
+              angle={-16}
+              textAnchor="end"
+              tickMargin={8}
+              tickFormatter={(value: string) => (value.length > 12 ? `${value.slice(0, 12)}...` : value)}
             />
             <YAxis 
               tick={{ fill: '#fbbf24', fontSize: 11 }}

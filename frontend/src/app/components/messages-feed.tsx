@@ -3,12 +3,16 @@ import { Message } from '../data/mock-data';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { motion } from 'motion/react';
+import { useMemo, useState } from 'react';
 
 interface MessagesFeedProps {
   messages: Message[];
 }
 
 export function MessagesFeed({ messages }: MessagesFeedProps) {
+  const [selectedTheme, setSelectedTheme] = useState('todos');
+  const [selectedSentiment, setSelectedSentiment] = useState('todos');
+
   const getSentimentIcon = (sentiment: string) => {
     switch (sentiment) {
       case 'positivo':
@@ -35,7 +39,22 @@ export function MessagesFeed({ messages }: MessagesFeedProps) {
     }
   };
 
-  const sortedMessages = [...messages].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  const themeOptions = useMemo(
+    () => ['todos', ...Array.from(new Set(messages.map((message) => message.theme))).sort((a, b) => a.localeCompare(b))],
+    [messages]
+  );
+
+  const filteredMessages = useMemo(
+    () =>
+      messages.filter((message) => {
+        const matchesTheme = selectedTheme === 'todos' || message.theme === selectedTheme;
+        const matchesSentiment = selectedSentiment === 'todos' || message.sentiment === selectedSentiment;
+        return matchesTheme && matchesSentiment;
+      }),
+    [messages, selectedTheme, selectedSentiment]
+  );
+
+  const sortedMessages = [...filteredMessages].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 
   return (
     <motion.div 
@@ -62,6 +81,31 @@ export function MessagesFeed({ messages }: MessagesFeedProps) {
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span className="text-xs text-amber-300/80 font-medium">{sortedMessages.length} mensajes</span>
           </div>
+        </div>
+
+        <div className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2">
+          <select
+            value={selectedTheme}
+            onChange={(e) => setSelectedTheme(e.target.value)}
+            className="w-full rounded-xl border border-amber-700/30 bg-slate-900/70 px-3 py-2 text-sm text-amber-100 outline-none transition focus:border-amber-500"
+          >
+            {themeOptions.map((theme) => (
+              <option key={theme} value={theme} className="bg-slate-900 text-amber-100">
+                {theme === 'todos' ? 'Todos los temas' : theme}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={selectedSentiment}
+            onChange={(e) => setSelectedSentiment(e.target.value)}
+            className="w-full rounded-xl border border-amber-700/30 bg-slate-900/70 px-3 py-2 text-sm text-amber-100 outline-none transition focus:border-amber-500"
+          >
+            <option value="todos" className="bg-slate-900 text-amber-100">Todas las emociones</option>
+            <option value="positivo" className="bg-slate-900 text-amber-100">Positivo</option>
+            <option value="neutro" className="bg-slate-900 text-amber-100">Neutro</option>
+            <option value="negativo" className="bg-slate-900 text-amber-100">Negativo</option>
+          </select>
         </div>
 
         <div className="space-y-3 max-h-[650px] overflow-y-auto pr-2 custom-scrollbar-dark">
@@ -106,6 +150,11 @@ export function MessagesFeed({ messages }: MessagesFeedProps) {
               </div>
             </motion.div>
           ))}
+          {sortedMessages.length === 0 && (
+            <div className="rounded-2xl border border-amber-700/20 bg-slate-900/40 p-4 text-center text-sm text-amber-200/70">
+              No hay mensajes para la combinación de filtros seleccionada.
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

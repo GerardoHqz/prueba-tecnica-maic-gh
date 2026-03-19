@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Coffee, Users, MessageSquare, Sparkles, Heart, Flame, Loader2, AlertCircle } from 'lucide-react';
+import { Coffee, MessageSquare, Sparkles, Heart, Flame, Loader2, AlertCircle } from 'lucide-react';
 import { SentimentPieChart } from './components/sentiment-pie-chart';
 import { ThemesBarChart } from './components/themes-bar-chart';
 import { MessagesFeed } from './components/messages-feed';
@@ -34,6 +34,7 @@ export default function App() {
   const positiveCount = sentimentData.find(s => s.name === 'Positivo')?.value || 0;
   const totalMessages = messages.length;
   const satisfactionRate = totalMessages > 0 ? ((positiveCount / totalMessages) * 100).toFixed(1) : '0';
+  const positiveRate = totalMessages > 0 ? ((positiveCount / totalMessages) * 100).toFixed(1) : '0';
 
   return (
     <div className="min-h-screen bg-[#1a1311] relative overflow-hidden">
@@ -102,6 +103,15 @@ export default function App() {
             >
               <p className="text-amber-400/80 text-sm">Análisis en Tiempo Real</p>
               <p className="text-amber-200/40 text-xs mt-1">Miércoles, 18 Marzo 2026</p>
+              <a
+                href="https://wa.link/6ye42o"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 inline-flex items-center gap-2 rounded-xl border border-green-500/40 bg-green-500/20 px-3 py-2 text-xs font-semibold text-green-100 transition hover:bg-green-500/30"
+              >
+                <MessageSquare className="h-4 w-4" />
+                Enviar mensajes
+              </a>
             </motion.div>
           </div>
         </div>
@@ -167,7 +177,7 @@ export default function App() {
             <p className="text-4xl font-bold text-amber-100">{totalMessages}</p>
           </motion.div>
 
-          {/* Clientes Activos */}
+          {/* Comentarios Positivos */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -175,10 +185,10 @@ export default function App() {
             className="col-span-6 md:col-span-2 bg-gradient-to-br from-blue-900/30 to-indigo-900/30 backdrop-blur-md border border-blue-700/20 rounded-3xl p-6 hover:border-blue-600/40 transition-all duration-500"
           >
             <div className="p-2.5 bg-blue-500/20 rounded-xl w-fit mb-3">
-              <Users className="w-5 h-5 text-blue-400" />
+              <Heart className="w-5 h-5 text-blue-400" fill="currentColor" />
             </div>
-            <p className="text-blue-300/60 text-xs uppercase tracking-wider mb-2">Activos</p>
-            <p className="text-4xl font-bold text-blue-100">{messages.length}</p>
+            <p className="text-blue-300/60 text-xs uppercase tracking-wider mb-2">Positivos</p>
+            <p className="text-4xl font-bold text-blue-100">{positiveRate}%</p>
           </motion.div>
 
           {/* Temas */}
