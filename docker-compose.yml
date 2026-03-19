@@ -1,0 +1,47 @@
+# Café Sentiment - Todo el stack con Docker Compose
+# Uso: docker compose up --build
+# Frontend: http://localhost:5173  |  Backend API: http://localhost:8000  |  MongoDB: localhost:27017
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: cafe-sentiment-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cafe-sentiment-backend
+    ports:
+      - "8000:8000"
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_DB_NAME: cafe_el_salvador
+      MONGODB_COLLECTION_MESSAGES: mensajes
+      # Opcional: descomenta y pon tu clave para análisis con IA (o usa archivo .env)
+      # GEMINI_API_KEY: ${GEMINI_API_KEY}
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cafe-sentiment-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      # El navegador (en tu PC) llama a la API en localhost:8000
+      VITE_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
