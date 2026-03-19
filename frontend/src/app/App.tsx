@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Coffee, MessageSquare, Sparkles, Heart, Flame, Loader2, AlertCircle } from 'lucide-react';
+import { Coffee, MessageSquare, Sparkles, Heart, Flame, Loader2, AlertCircle, Tag } from 'lucide-react';
 import { SentimentPieChart } from './components/sentiment-pie-chart';
 import { ThemesBarChart } from './components/themes-bar-chart';
 import { MessagesFeed } from './components/messages-feed';
@@ -34,7 +34,7 @@ export default function App() {
   const positiveCount = sentimentData.find(s => s.name === 'Positivo')?.value || 0;
   const totalMessages = messages.length;
   const satisfactionRate = totalMessages > 0 ? ((positiveCount / totalMessages) * 100).toFixed(1) : '0';
-  const positiveRate = totalMessages > 0 ? ((positiveCount / totalMessages) * 100).toFixed(1) : '0';
+  const topTheme = themeData[0]?.name ?? 'Sin datos';
 
   return (
     <div className="min-h-screen bg-[#1a1311] relative overflow-hidden">
@@ -112,6 +112,8 @@ export default function App() {
                 <MessageSquare className="h-4 w-4" />
                 Enviar mensajes
               </a>
+              <p className="mt-2 text-[11px] text-amber-200/70">Codigo Twilio Sandbox</p>
+              <p className="text-[11px] font-semibold text-amber-100">join atmosphere-ourselves</p>
             </motion.div>
           </div>
         </div>
@@ -177,7 +179,7 @@ export default function App() {
             <p className="text-4xl font-bold text-amber-100">{totalMessages}</p>
           </motion.div>
 
-          {/* Comentarios Positivos */}
+          {/* Tema del día */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -185,10 +187,10 @@ export default function App() {
             className="col-span-6 md:col-span-2 bg-gradient-to-br from-blue-900/30 to-indigo-900/30 backdrop-blur-md border border-blue-700/20 rounded-3xl p-6 hover:border-blue-600/40 transition-all duration-500"
           >
             <div className="p-2.5 bg-blue-500/20 rounded-xl w-fit mb-3">
-              <Heart className="w-5 h-5 text-blue-400" fill="currentColor" />
+              <Tag className="w-5 h-5 text-blue-400" />
             </div>
-            <p className="text-blue-300/60 text-xs uppercase tracking-wider mb-2">Positivos</p>
-            <p className="text-4xl font-bold text-blue-100">{positiveRate}%</p>
+            <p className="text-blue-300/60 text-xs uppercase tracking-wider mb-2">Tema del día</p>
+            <p className="text-xl font-bold text-blue-100 leading-tight">{topTheme}</p>
           </motion.div>
 
           {/* Temas */}

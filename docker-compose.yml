@@ -23,8 +23,8 @@ services:
       MONGODB_URI: mongodb://mongodb:27017
       MONGODB_DB_NAME: cafe_el_salvador
       MONGODB_COLLECTION_MESSAGES: mensajes
-      # Opcional: descomenta y pon tu clave para análisis con IA (o usa archivo .env)
-      # GEMINI_API_KEY: ${GEMINI_API_KEY}
+      # Opcional: para análisis con IA.
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
     depends_on:
       - mongodb
     restart: unless-stopped
@@ -37,7 +37,6 @@ services:
     ports:
       - "5173:5173"
     environment:
-      # El navegador (en tu PC) llama a la API en localhost:8000
       VITE_API_URL: http://localhost:8000
     depends_on:
       - backend

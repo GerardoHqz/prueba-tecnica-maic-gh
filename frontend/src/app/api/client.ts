@@ -19,6 +19,7 @@ function mapToMessage(item: MensajeAPI): Message {
   return {
     id: item.id,
     text: item.texto_mensaje,
+    summary: item.resumen ?? undefined,
     sentiment,
     theme: item.tema ?? 'Otro',
     timestamp: new Date(item.timestamp),

@@ -1,6 +1,6 @@
 import { MessageSquare, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Message } from '../data/mock-data';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { motion } from 'motion/react';
 import { useMemo, useState } from 'react';
@@ -12,6 +12,7 @@ interface MessagesFeedProps {
 export function MessagesFeed({ messages }: MessagesFeedProps) {
   const [selectedTheme, setSelectedTheme] = useState('todos');
   const [selectedSentiment, setSelectedSentiment] = useState('todos');
+  const [selectedContentType, setSelectedContentType] = useState<'original' | 'resumen'>('original');
 
   const getSentimentIcon = (sentiment: string) => {
     switch (sentiment) {
@@ -83,7 +84,7 @@ export function MessagesFeed({ messages }: MessagesFeedProps) {
           </div>
         </div>
 
-        <div className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2">
+        <div className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-3">
           <select
             value={selectedTheme}
             onChange={(e) => setSelectedTheme(e.target.value)}
@@ -105,6 +106,15 @@ export function MessagesFeed({ messages }: MessagesFeedProps) {
             <option value="positivo" className="bg-slate-900 text-amber-100">Positivo</option>
             <option value="neutro" className="bg-slate-900 text-amber-100">Neutro</option>
             <option value="negativo" className="bg-slate-900 text-amber-100">Negativo</option>
+          </select>
+
+          <select
+            value={selectedContentType}
+            onChange={(e) => setSelectedContentType(e.target.value as 'original' | 'resumen')}
+            className="w-full rounded-xl border border-amber-700/30 bg-slate-900/70 px-3 py-2 text-sm text-amber-100 outline-none transition focus:border-amber-500"
+          >
+            <option value="original" className="bg-slate-900 text-amber-100">Mensaje original</option>
+            <option value="resumen" className="bg-slate-900 text-amber-100">Resumen IA</option>
           </select>
         </div>
 
@@ -130,14 +140,16 @@ export function MessagesFeed({ messages }: MessagesFeedProps) {
                       </div>
                     </div>
                     <span className="text-[10px] text-amber-400/40">
-                      {formatDistanceToNow(message.timestamp, { addSuffix: true, locale: es })}
+                      {format(message.timestamp, "dd/MM/yyyy HH:mm", { locale: es })} ({formatDistanceToNow(message.timestamp, { addSuffix: true, locale: es })})
                     </span>
                   </div>
                 </div>
               </div>
               
               <p className="text-amber-100/80 text-sm leading-relaxed mb-3 pl-12">
-                {message.text}
+                {selectedContentType === 'resumen'
+                  ? (message.summary ?? 'Sin resumen IA disponible para este mensaje.')
+                  : message.text}
               </p>
               
               <div className="flex gap-2 flex-wrap pl-12">

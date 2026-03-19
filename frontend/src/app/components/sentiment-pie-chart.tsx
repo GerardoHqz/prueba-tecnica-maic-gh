@@ -71,8 +71,10 @@ export function SentimentPieChart({ data }: SentimentPieChartProps) {
                 backgroundColor: 'rgba(30, 20, 16, 0.95)', 
                 border: '1px solid rgba(217, 119, 6, 0.3)',
                 borderRadius: '12px',
-                color: '#fbbf24'
+                color: '#fef3c7'
               }}
+              itemStyle={{ color: '#fde68a' }}
+              labelStyle={{ color: '#f59e0b', fontWeight: 700 }}
             />
           </PieChart>
         </ResponsiveContainer>

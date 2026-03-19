@@ -1,6 +1,7 @@
 export interface Message {
   id: string;
   text: string;
+  summary?: string;
   sentiment: 'positivo' | 'negativo' | 'neutro';
   theme: string;
   timestamp: Date;
